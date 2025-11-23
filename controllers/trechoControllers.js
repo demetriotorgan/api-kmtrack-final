@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 module.exports.adicionarTrecho = async(req,res)=>{
     try {
-        const {nomeTrecho, distancia, inicio, fim} = req.body;
+        const {nomeTrecho, distancia, inicio, fim, data} = req.body;
         const trechoExistente = await Trecho.findOne({nomeTrecho});
         if(trechoExistente){
             return res.status(400).json({
@@ -11,9 +11,7 @@ module.exports.adicionarTrecho = async(req,res)=>{
                 msg: "Trecho já cadastrado"
             });
         }
-        const novoTrecho = new Trecho({
-            nomeTrecho, distancia, inicio, fim
-        });
+        const novoTrecho = new Trecho({nomeTrecho, distancia, inicio, fim,data});
         await novoTrecho.save();
         return res.status(201).json({
             sucess:true,
