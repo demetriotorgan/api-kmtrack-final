@@ -2,8 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
+const connectDB = require('./config/database');
+const iniciarHeartbeat = require('./config/heartbeat'); // <--- adicionado
+
 
 const trechoRoutes = require('./routes/trechoRoutes');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,10 +21,11 @@ app.use((req,res, next)=>{
     next();    
   });
 
-mongoose
-  .connect(process.env.DATABASE_URL)
-  .then(()=>console.log('Conectado ao MongoDB!!'))
-  .catch((err)=>console.log(err));
+  // 🔥 Conectar ao banco UMA VEZ
+connectDB();
+
+// 🔥 Iniciar heartbeat (manter conexão viva)
+iniciarHeartbeat(); // <-- aqui está o segredo!
 
 app.use('/', trechoRoutes);
 app.get('/', (req, res)=>{;
