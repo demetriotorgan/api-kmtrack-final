@@ -25,7 +25,7 @@ app.use((req,res, next)=>{
 connectDB();
 
 // 🔥 Iniciar heartbeat (manter conexão viva)
-iniciarHeartbeat(); // <-- aqui está o segredo!
+// iniciarHeartbeat(); 
 
 app.use('/', trechoRoutes);
 app.get('/', (req, res)=>{;
