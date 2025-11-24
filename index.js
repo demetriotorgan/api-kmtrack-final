@@ -21,15 +21,24 @@ app.use((req,res, next)=>{
     next();    
   });
 
-  // 🔥 Conectar ao banco UMA VEZ
-connectDB();
+ // ----------------------------------------------------------
+// 🟢 INICIAR SERVIDOR APENAS DEPOIS DO BANCO CONECTAR
+// ----------------------------------------------------------
+async function startServer() {
+  console.log("⏳ Conectando ao MongoDB...");
+  await connectDB();        // <-- AGORA está aguardando
 
-// 🔥 Iniciar heartbeat (manter conexão viva)
-// iniciarHeartbeat(); 
+  iniciarHeartbeat();        // <-- iniciar após conexão OK
 
-app.use('/', trechoRoutes);
-app.get('/', (req, res)=>{;
-    res.status(200).send('🚀 API de Viagens está online e funcional!');
-});
+  app.use("/", trechoRoutes);
 
-app.listen(PORT, ()=>console.log(`Rodando na porta ${PORT}`));
+  app.get("/", (req, res) => {
+    res.status(200).send("🚀 API de Viagens está online e funcional!");
+  });
+
+ app.listen(PORT, () =>
+    console.log(`Rodando na porta ${PORT}`)
+  );
+}
+
+startServer();
