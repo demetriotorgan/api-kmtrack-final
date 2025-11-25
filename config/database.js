@@ -24,4 +24,8 @@ async function connectDB() {
   }
 }
 
-module.exports = connectDB;
+function getMongoStatus() {
+  return isConnected ? "connected" : "disconnected";
+}
+
+module.exports = {connectDB, getMongoStatus};

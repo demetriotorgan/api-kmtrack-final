@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
-const connectDB = require('./config/database');
-const iniciarHeartbeat = require('./config/heartbeat'); // <--- adicionado
+const iniciarHeartbeat = require('./config/heartbeat'); 
+const {connectDB, getMongoStatus} = require('./config/database')
 
 
 const trechoRoutes = require('./routes/trechoRoutes');
@@ -40,5 +40,16 @@ async function startServer() {
     console.log(`Rodando na porta ${PORT}`)
   );
 }
+
+// ----------------------------------------------------------
+// 🧪 ENDPOINT: Status da conexão com o MongoDB
+// ----------------------------------------------------------
+app.get("/db-status", (req, res) => {
+  return res.json({
+    mongo: getMongoStatus(),
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
 
 startServer();
