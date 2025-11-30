@@ -7,6 +7,7 @@ const {connectDB, getMongoStatus} = require('./config/database')
 
 
 const trechoRoutes = require('./routes/trechoRoutes');
+const pedagioRoutes = require('./routes/pedagioRoutes');
 
 
 const app = express();
@@ -30,7 +31,7 @@ async function startServer() {
 
   iniciarHeartbeat();        // <-- iniciar após conexão OK
 
-  app.use("/", trechoRoutes);
+  app.use("/", trechoRoutes, pedagioRoutes);
 
   app.get("/", (req, res) => {
     res.status(200).send("🚀 API de Viagens está online e funcional!");
