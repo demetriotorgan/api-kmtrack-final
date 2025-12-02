@@ -17,7 +17,7 @@ module.exports.adicionarParada = async(req,res)=>{
             local, 
             tipo, 
             horaInicio, 
-            horaFinal
+            horaFinal: horaFinal ?? null
         });
 
         await novaParada.save();
