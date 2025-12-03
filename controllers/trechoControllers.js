@@ -125,3 +125,35 @@ module.exports.editarTrecho = async (req, res) => {
         });
     }
 };
+
+// Retorna os 3 últimos trechos + a distância total acumulada de todos os registros
+module.exports.trechosRecentes = async (req, res) => {
+    try {
+        // Buscar os 3 últimos registros pela data do campo `data`
+        const ultimosTrechos = await Trecho.find()
+            .sort({ data: -1 })
+            .limit(3);
+
+        // Calcular a soma da distância de todos os registros do Model Trecho
+        const resultadoDistancia = await Trecho.aggregate([
+            { $group: { _id: null, totalDistancia: { $sum: "$distancia" } } }
+        ]);
+
+        const totalDistancia = resultadoDistancia.length > 0
+            ? resultadoDistancia[0].totalDistancia
+            : 0;
+
+        return res.json({
+            sucesso: true,
+            ultimosTrechos,
+            totalDistancia
+        });
+
+    } catch (erro) {
+        console.error("Erro ao buscar dados:", erro);
+        return res.status(500).json({
+            sucesso: false,
+            mensagem: "Erro no servidor ao buscar trechos"
+        });
+    }
+};
