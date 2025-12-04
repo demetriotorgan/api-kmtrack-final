@@ -72,3 +72,36 @@ module.exports.deletarPedagio = async(req,res)=>{
         });
     }
 };
+
+module.exports.pedagiosRecentes = async (req, res) => {
+  try {
+    // Buscar os 3 últimos registros
+    const ultimosPedagios = await Pedagio.find()
+      .sort({ _id: -1 })
+      .limit(3);
+
+    // Calcular a soma de todos os valores já registrados
+    const resultadoTotal = await Pedagio.aggregate([
+      { $group: { _id: null, totalValor: { $sum: "$valor" } } }
+    ]);
+
+    const totalValor = resultadoTotal.length > 0
+      ? resultadoTotal[0].totalValor
+      : 0;
+
+    return res.json({
+      sucesso: true,
+      ultimosPedagios,
+      totalValor
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar dados de pedágios:", erro);
+
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro no servidor ao buscar pedágios"
+    });
+  }
+};
+
