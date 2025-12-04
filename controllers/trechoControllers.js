@@ -131,7 +131,7 @@ module.exports.trechosRecentes = async (req, res) => {
     try {
         // Buscar os 3 últimos registros pela data do campo `data`
         const ultimosTrechos = await Trecho.find()
-            .sort({ data: -1 })
+            .sort({ _id: -1 })
             .limit(3);
 
         // Calcular a soma da distância de todos os registros do Model Trecho
