@@ -94,3 +94,48 @@ module.exports.paradasRecentes = async (req, res) => {
     });
   }
 };
+
+module.exports.editarParada = async(req,res)=>{
+    try {
+        const {id} = req.params;
+        const {local, tipo, horaInicio, horaFinal} = req.body;
+
+        const parada = await Paradas.findById(id);
+        if(!parada){
+            return res.status(404).json({
+                sucess:false,
+                msg:"Parada não encontrada"
+            });
+        }
+
+        if(local && local !== parada.local){
+            const localExistente = await Paradas.findOne({local});
+            if(localExistente){
+                return res.status(400).json({
+                    sucess:false,
+                    msg:'Já existe um local cadastrado com esse nome'
+                });
+            }
+        }
+
+        parada.local = local ?? parada.local;
+        parada.tipo = tipo ?? parada.tipo;
+        parada.horaInicio = horaInicio ?? parada.horaInicio;
+        parada.horaFinal = horaFinal ?? parada.horaFinal;
+
+        const paradaAtualizada = await parada.save();
+
+        return res.status(200).json({
+            sucess:true,
+            msg:'Parada atualizada com sucesso',
+            parada: paradaAtualizada
+        });
+    } catch (error) {
+         console.error("Erro ao atualizar trecho:", error);
+        return res.status(500).json({
+            success: false,
+            msg: "Erro interno ao atualizar trecho",
+            error: error.message
+        });
+    }
+}
