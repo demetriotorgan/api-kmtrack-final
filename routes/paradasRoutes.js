@@ -1,10 +1,11 @@
 const express = require('express');
-const { adicionarParada, listarParadas, deletarParada } = require('../controllers/paradasController');
+const { adicionarParada, listarParadas, deletarParada, paradasRecentes } = require('../controllers/paradasController');
 const router = express.Router();
 
 router.post('/salvar-parada', adicionarParada);
 router.get('/listar-parada', listarParadas);
 router.delete('/deletar-parada/:id', deletarParada);
+router.get('/paradas-recentes', paradasRecentes);
 
 module.exports = router;
 

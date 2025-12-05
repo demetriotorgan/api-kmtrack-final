@@ -73,3 +73,26 @@ module.exports.deletarParada = async(req,res)=>{
         
     }
 };
+
+const Paradas = require('../models/Paradas'); // ajuste o caminho se necessário
+
+module.exports.paradasRecentes = async (req, res) => {
+  try {
+    // Buscar os 3 registros mais recentes
+    const ultimasParadas = await Paradas.find()
+      .sort({ _id: -1 })
+      .limit(3);
+
+    return res.json({
+      sucesso: true,
+      ultimasParadas
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar dados das paradas:", erro);
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro no servidor ao buscar paradas recentes"
+    });
+  }
+};
