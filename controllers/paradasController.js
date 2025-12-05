@@ -74,8 +74,6 @@ module.exports.deletarParada = async(req,res)=>{
     }
 };
 
-const Paradas = require('../models/Paradas'); // ajuste o caminho se necessário
-
 module.exports.paradasRecentes = async (req, res) => {
   try {
     // Buscar os 3 registros mais recentes
