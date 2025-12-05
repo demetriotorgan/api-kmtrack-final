@@ -74,3 +74,34 @@ try {
     })
 }
 };
+
+module.exports.abastecimentosRecentes = async (req, res) => {
+  try {
+    // Buscar os 3 últimos registros pela ordem de criação (_id)
+    const ultimosAbastecimentos = await Abastecimento.find()
+      .sort({ _id: -1 })
+      .limit(3);
+
+    // Somar o valor total de todos os abastecimentos cadastrados
+    const resultadoTotal = await Abastecimento.aggregate([
+      { $group: { _id: null, totalValor: { $sum: "$valor" } } }
+    ]);
+
+    const totalValor = resultadoTotal.length > 0
+      ? resultadoTotal[0].totalValor
+      : 0;
+
+    return res.json({
+      sucesso: true,
+      ultimosAbastecimentos,
+      totalValor
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar dados dos abastecimentos:", erro);
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro no servidor ao buscar abastecimentos recentes"
+    });
+  }
+};
