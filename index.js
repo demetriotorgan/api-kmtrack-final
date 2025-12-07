@@ -10,6 +10,7 @@ const trechoRoutes = require('./routes/trechoRoutes');
 const pedagioRoutes = require('./routes/pedagioRoutes');
 const paradasRoutes = require('./routes/paradasRoutes');
 const abastecimentos = require('./routes/abastecimentoRoutes');
+const custos = require('./routes/custosRoutes');
 
 
 const app = express();
@@ -34,7 +35,7 @@ async function startServer() {
 
   iniciarHeartbeat();        // <-- iniciar após conexão OK
 
-  app.use("/", trechoRoutes, pedagioRoutes, paradasRoutes, abastecimentos);
+  app.use("/", trechoRoutes, pedagioRoutes, paradasRoutes, abastecimentos, custos);
 
   app.get("/", (req, res) => {
     res.status(200).send("🚀 API de Viagens está online e funcional!");
