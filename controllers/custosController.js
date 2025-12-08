@@ -73,3 +73,39 @@ module.exports.deletarCustos = async(req,res)=>{
     }
 };
 
+module.exports.custosRecentes = async (req, res) => {
+  try {
+
+    // Buscar os 3 últimos custos registrados
+    const ultimosCustos = await Custos.find()
+      .sort({ _id: -1 })
+      .limit(3);
+
+    // Calcular o total de todos os valores somados
+    const resultadoTotal = await Custos.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalValor: { $sum: "$valor" }
+        }
+      }
+    ]);
+
+    const totalValor = resultadoTotal.length > 0
+      ? resultadoTotal[0].totalValor
+      : 0;
+
+    return res.json({
+      sucesso: true,
+      ultimosCustos,
+      totalValor
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar dados dos custos:", erro);
+    return res.status(500).json({
+      sucesso: false,
+      mensagem: "Erro no servidor ao buscar custos recentes"
+    });
+  }
+};
