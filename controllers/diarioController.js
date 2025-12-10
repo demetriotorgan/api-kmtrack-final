@@ -2,7 +2,7 @@ const Diario = require('../models/Diario');
 
 module.exports.adicionarDiario = async(req,res)=>{
 try {
-    const {titulo,texto} = req.body;
+    const {titulo,texto, data} = req.body;
     const diarioExistente = await Diario.findOne({titulo});
     if(diarioExistente){
         return res.status(400).json({
@@ -13,7 +13,8 @@ try {
 
     const novoDiario = new Diario({
         titulo,
-        texto
+        texto,
+        data
     });
 
     await novoDiario.save();
